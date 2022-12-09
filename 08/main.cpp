@@ -7,60 +7,56 @@ struct pos{
   pos(int x, int y): x{x}, y{y}{};
 };
 
-bool checkVisibilityLeft(pos p, std::vector<std::vector<int>>& m){
+int checkVisibilityLeft(pos p, std::vector<std::vector<int>>& m){
   int left = p.x;
   int height = m[p.x][p.y];
   while(left > 0){
-    if(m[left - 1][p.y] >= height)
-      return false;
-    left--;
+    if(m[--left][p.y] >= height)
+      break;
   }
-  return true;
+  return p.x - left;
 }
 
-bool checkVisibilityTop(pos p, std::vector<std::vector<int>>& m){
+int checkVisibilityTop(pos p, std::vector<std::vector<int>>& m){
   int top = p.y;
   int height = m[p.x][p.y];
   while(top > 0){
-    if(m[p.x][top - 1] >= height)
-      return false;
-    top--;
+    if(m[p.x][--top] >= height)
+      break;
+
   }
-  return true;
+  return p.y - top;
 }
 
-bool checkVisibilityRigth(pos p, std::vector<std::vector<int>>& m){
+int checkVisibilityRigth(pos p, std::vector<std::vector<int>>& m){
   int right = p.x;
   int height = m[p.x][p.y];
   while(right < m[p.x].size() - 1){
-    if( m[right + 1][p.y] >= height)
-      return false;
-    right++;
+    if( m[++right][p.y] >= height)
+      break;
   }
-  return true;
+  return right  - p.x ;
 }
 
-bool checkVisibilityBottom(pos p, std::vector<std::vector<int>>& m){
+int checkVisibilityBottom(pos p, std::vector<std::vector<int>>& m){
   int bottom = p.y;
   int height = m[p.x][p.y];
   while(bottom < m.size() - 1){
-    if(m[p.x][bottom +1] >= height)
-      return false;
-    bottom++;
+    if(m[p.x][++bottom] >= height)
+      break;
+
   }
-  return true;
+  return bottom  - p.y;
 }
 
-bool checkVisibility(pos p, std::vector<std::vector<int>>& m){
-  if(checkVisibilityLeft(p, m))
-        return true;
-  if(checkVisibilityTop(p, m))
-        return true;
-  if(checkVisibilityBottom(p, m))
-        return true;
-  if(checkVisibilityRigth(p, m))
-        return true;
-  return false; 
+int checkVisibility(pos p, std::vector<std::vector<int>>& m){
+  int scale = 1;
+  scale *= checkVisibilityLeft(p, m);
+  scale *= checkVisibilityTop(p, m);
+  scale *= checkVisibilityBottom(p, m);
+  scale *= checkVisibilityRigth(p, m);
+
+  return scale;
 }
 
 int main(int argc, char** argv){
@@ -84,19 +80,18 @@ int main(int argc, char** argv){
     }
 
 
-    
+    int max_scale = 0;
     int visible = (trees.size() * 2) +  (trees[0].size() * 2) - 4 ;
     for(int i = 1; i < trees.size() -1; i++){
       for(int j = 1; j < trees[0].size() -1; j++){
-          if(checkVisibility(pos(i,j), trees)){
-            visible++; 
-            std::cout << "\033[1;31m" << trees[i][j] << "\033[0m";
-          } else {
-            std::cout << trees[i][j];  
-          }
+        std::cout << "distance for: " << trees[i][j] << " " << checkVisibility(pos(i,j), trees) << std::endl;
+        max_scale = std::max(max_scale, checkVisibility(pos(i,j), trees));
       }
-      std::cout << std::endl;
     }
 
-    std::cout << "Puzzel 1: " << visible << std::endl;
+    std::cout << "Puzzel 2: " << max_scale << std::endl;
+
+
+
+
 }
