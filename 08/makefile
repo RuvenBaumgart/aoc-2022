@@ -3,17 +3,15 @@ SRCDIR      :=
 INCDIR      := ../../../aoc/2022
 BUILDDIR    := obj
 TARGETDIR   := bin
-CPPUTEST_HOME	:= /home/rb/projects/tdd/cpputest
 SRCEXT      := cpp
 DEPEXT      := h
 OBJEXT      := o
 
-LIB 	:= -L$(CPPUTEST_HOME)/cpputest_build/lib
+LIB 	:= 
 
-LIBRARIES := -lCppUTest -lCppUTestExt
+LIBRARIES := 
 
 INC		:= -I./$(INCDIR) \
-		   -I$(CPPUTEST_HOME)/include
 
 CXX		:= g++
 STD		:= c++11
@@ -43,8 +41,20 @@ $(BUILDDIR)/%.$(OBJEXT): $(foreach S,$(SOURCES),$(if $(findstring $(notdir $(pat
 	$(CXX) $(INC) $(CFLAGS) -c -MMD $(foreach S,$(SOURCES),$(if $(findstring $(notdir $(patsubst %.o, %.cpp, $@)),$S),$S)) -o $@
 
 
-run:
-		./bin/$(TARGET)
+# If the first argument is "run"...
+ifeq (run,$(firstword $(MAKECMDGOALS)))
+  # use the rest as arguments for "run"
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(RUN_ARGS):;@:)
+endif
+
+$(TARGET): # ...
+    # ...
+
+.PHONY: run
+run : $(TARGET)
+	@echo ./bin/$(TARGET) $(RUN_ARGS)
 
 clean:
 
