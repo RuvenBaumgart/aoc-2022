@@ -1,1 +1,1 @@
-obj/main.o: /home/rb/projects/etc/aoc/2022/12/main.cpp
+obj/main.o: /Users/r.giskard/Offline/aoc/2022/12/main.cpp

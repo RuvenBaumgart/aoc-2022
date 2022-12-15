@@ -32,7 +32,7 @@ void split(const std::string& str, const char c, std::vector<std::string>& res){
 
 int count_occurenc_of(const char c, std::string s){
   int occurences = 0;
-  for(int i = 0; i < s.size(); ++i){
+  for(size_t i = 0; i < s.size(); ++i){
     if(s[i] == c)
       occurences++;
   }
@@ -41,7 +41,7 @@ int count_occurenc_of(const char c, std::string s){
 
 std::vector<size_t> find_positions_of(const char c, std::string str){
     std::vector<size_t> result{};
-    int pos = 0;
+    unsigned long long pos = 0;
     while(1){
       pos = str.find(c, pos);
       if(pos == std::string::npos)
